@@ -16,28 +16,27 @@ export function SignupForm() {
   const [errors, setErrors] = useState({});
 
   const validate = () => {
-    const newErrors = {};
+  const newErrors = {};
 
-    // First name validation
-    if (!/^[A-Za-z]+$/.test(details.firstName)) {
-      newErrors.firstName = "First name should contain only letters.";
-    }
+  if (details.firstName === "" || /\d/.test(details.firstName)) {
+    newErrors.firstName = "First name must only have letters.";
+  }
 
-    // Last name validation
-    if (!/^[A-Za-z]+$/.test(details.lastName)) {
-      newErrors.lastName = "Last name should contain only letters.";
-    }
+  if (details.lastName === "" || /\d/.test(details.lastName)) {
+    newErrors.lastName = "Last name must only have letters.";
+  }
 
-    // Email validation
-    if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(details.email)
-    ) {
-      newErrors.email = "Please enter a valid email address.";
-    }
+  if (
+    details.email === "" ||
+    !details.email.includes("@") ||
+    !details.email.includes(".")
+  ) {
+    newErrors.email = "Please enter a valid email address.";
+  }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,7 +50,6 @@ export function SignupForm() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Clear error when user starts fixing the input
     setErrors((prev) => ({ ...prev, [name]: "" }));
 
     setDetails((prev) => ({
@@ -74,7 +72,6 @@ export function SignupForm() {
         <h2 className="text-2xl font-bold text-center mb-1">Create a new account</h2>
         <p className="text-center text-gray-600 text-sm mb-4">It's quick and easy.</p>
 
-        {/* Name Fields */}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(100%,1fr))] gap-4 mb-3">
           <div>
             <input
@@ -100,7 +97,6 @@ export function SignupForm() {
           </div>
         </div>
 
-        {/* Date of Birth */}
         <div className="mb-3">
           <label className="text-sm block mb-1">Date of birth</label>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-4">
@@ -142,7 +138,6 @@ export function SignupForm() {
           </div>
         </div>
 
-        {/* Gender */}
         <div className="mb-3">
           <label className="text-sm block mb-1">Gender</label>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-4">
@@ -164,7 +159,7 @@ export function SignupForm() {
           </div>
         </div>
 
-        {/* Email */}
+        
         <div className="mb-3">
           <input
             type="text"
@@ -177,7 +172,7 @@ export function SignupForm() {
           {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
         </div>
 
-        {/* Password */}
+     
         <div className="mb-3">
           <input
             type="password"
@@ -189,7 +184,7 @@ export function SignupForm() {
           />
         </div>
 
-        {/* Submit */}
+      
         <input
           type="submit"
           onClick={handleSubmit}
