@@ -1,5 +1,8 @@
 import { useState } from "react";
 import "./AuthForm.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -36,18 +39,55 @@ export default function AuthForm() {
   };
 
 const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!isLogin) {
-      console.log("Form submitted:", formData);
-    }
-    else {
-      console.log("Login submitted:", {
-        email: formData.email,
-        password: formData.password
-      });
-    }
+  e.preventDefault();
+
+  
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  if (!isLogin) {
     
-}
+    const userExists = users.find(user => user.email === formData.email);
+
+    if (userExists) {
+      console.log("User with this email already exists!");
+      
+       toast.error("User with this email already exists!");
+      return;
+    }
+
+    
+    users.push(formData);
+    localStorage.setItem("users", JSON.stringify(users));
+    console.log("User signed up successfully!");
+    toast.success("Signup successful!");
+    setIsLogin(true); 
+  } else {
+    
+    const matchedUser = users.find(
+      user => user.email === formData.email && user.password === formData.password
+    );
+
+    if (matchedUser) {
+      console.log("User logged in successfully!");
+      toast.success("Successfully logged in!");
+    } else {
+      console.log("Login failed: Invalid email or password.");
+       toast.error("Login failed: Invalid email or password.");
+    }
+  }
+
+  
+  setFormData({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    day: "",
+    month: "",
+    year: "",
+    country: ""
+  });
+};
 
 
 
@@ -149,6 +189,7 @@ const handleSubmit = (e) => {
             {isLogin ? "Signup now" : "Login now"}
           </span>
         </p>
+         <ToastContainer position="top-center" autoClose={2000} />
       </div>
     
   );
